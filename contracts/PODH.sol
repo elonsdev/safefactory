@@ -1,3 +1,5 @@
+pragma solidity ^0.6.12;
+
 // Copy of Safemoon with code refactoring, auditing and added features
 //
 // SafeMoon fixes:
@@ -22,8 +24,6 @@
 // 2. Added extra fee that is set in init and allows the initializer to set an address to
 //    receive the extra fee and set the extra fee % (This can be used for additional burn / charity / dev)
 
-
-pragma solidity ^0.6.12;
 // SPDX-License-Identifier: Unlicensed
 interface IERC20 {
 
@@ -713,6 +713,7 @@ contract initializedBep20 is Context, IERC20, Ownable {
     uint256 private _tTotal;
     uint256 private _rTotal;
     uint256 private _tFeeTotal;
+    uint256 private _xFeeTotal;
 
     string private _name;
     string private _symbol;
@@ -762,6 +763,8 @@ contract initializedBep20 is Context, IERC20, Ownable {
 
     function init(string memory name, string memory symbol, uint256 totalsupply, uint8 decimals, uint256 maxtxamount, uint256 taxFee, uint256 liquidityFee, uint256 numtokenstoselltoaddtoliquidity, address extrafeewallet, uint256 extrafeepercent, address newContractOwner) public {
         require(!initialized, "Contract instance has already been initialized");
+        require(extrafeewallet != newContractOwner, "Extra Fee wallet must not be your wallet address");
+
         initialized = true;
 
         transferOwnershipFromInitialized(newContractOwner);
@@ -795,7 +798,6 @@ contract initializedBep20 is Context, IERC20, Ownable {
         //exclude owner and this contract from fee
         _isExcludedFromFee[owner()] = true;
         _isExcludedFromFee[address(this)] = true;
-
 
 
         emit Transfer(address(0), newContractOwner, _tTotal);
@@ -868,9 +870,14 @@ contract initializedBep20 is Context, IERC20, Ownable {
         return _isExcluded[account];
     }
 
-    function totalFees() public view returns (uint256) {
+    function taxFees() public view returns (uint256) {
         return _tFeeTotal;
     }
+
+    function xFees() public view returns (uint256) {
+        return _xFeeTotal;
+    }
+
 
     function reflectionFromToken(uint256 tAmount, bool deductTransferFee) public view returns(uint256) {
         require(tAmount <= _tTotal, "Amount must be less than supply");
@@ -911,16 +918,7 @@ contract initializedBep20 is Context, IERC20, Ownable {
             }
         }
     }
-        function _transferBothExcluded(address sender, address recipient, uint256 tAmount) private {
-        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity) = _getValues(tAmount);
-        _tOwned[sender] = _tOwned[sender].sub(tAmount);
-        _rOwned[sender] = _rOwned[sender].sub(rAmount);
-        _tOwned[recipient] = _tOwned[recipient].add(tTransferAmount);
-        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);
-        _takeLiquidity(tLiquidity);
-        _reflectFee(rFee, tFee);
-        emit Transfer(sender, recipient, tTransferAmount);
-    }
+
 
         function excludeFromFee(address account) public onlyOwner {
         _isExcludedFromFee[account] = true;
@@ -956,9 +954,10 @@ contract initializedBep20 is Context, IERC20, Ownable {
      //to receive BNB from pancakeswapV2Router when swapping
     receive() external payable {}
 
-    function _reflectFee(uint256 rFee, uint256 tFee) private {
+    function _reflectFee(uint256 rFee, uint256 tFee, uint256 xFee) private {
         _rTotal = _rTotal.sub(rFee);
         _tFeeTotal = _tFeeTotal.add(tFee);
+        _xFeeTotal = _xFeeTotal.add(xFee);
     }
 
     function _getValues(uint256 tAmount) private view returns (uint256, uint256, uint256, uint256, uint256, uint256) {
@@ -1172,14 +1171,13 @@ contract initializedBep20 is Context, IERC20, Ownable {
 
         uint256 extraFeeAmount = rAmount / (100 / _extraFeePercent);
 
-        _rOwned[sender] = _rOwned[sender].sub(rAmount); // takes amount from sender
-        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount).sub(extraFeeAmount); // adds amount to sender after fee and subs 1% for dev
+        _rOwned[sender] = _rOwned[sender].sub(rAmount);
+        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount).sub(extraFeeAmount);
 
-        // add the share to your target address
         _rOwned[_extrafeewallet] = _rOwned[_extrafeewallet].add(extraFeeAmount);
 
         _takeLiquidity(tLiquidity);
-        _reflectFee(rFee, tFee);
+        _reflectFee(rFee, tFee, extraFeeAmount);
         emit Transfer(sender, recipient, tTransferAmount);
     }
 
@@ -1189,7 +1187,7 @@ contract initializedBep20 is Context, IERC20, Ownable {
         _tOwned[recipient] = _tOwned[recipient].add(tTransferAmount);
         _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);
         _takeLiquidity(tLiquidity);
-        _reflectFee(rFee, tFee);
+        _reflectFee(rFee, tFee, 0);
         emit Transfer(sender, recipient, tTransferAmount);
     }
 
@@ -1199,7 +1197,18 @@ contract initializedBep20 is Context, IERC20, Ownable {
         _rOwned[sender] = _rOwned[sender].sub(rAmount);
         _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);
         _takeLiquidity(tLiquidity);
-        _reflectFee(rFee, tFee);
+        _reflectFee(rFee, tFee, 0);
+        emit Transfer(sender, recipient, tTransferAmount);
+    }
+
+    function _transferBothExcluded(address sender, address recipient, uint256 tAmount) private {
+        (uint256 rAmount, uint256 rTransferAmount, uint256 rFee, uint256 tTransferAmount, uint256 tFee, uint256 tLiquidity) = _getValues(tAmount);
+        _tOwned[sender] = _tOwned[sender].sub(tAmount);
+        _rOwned[sender] = _rOwned[sender].sub(rAmount);
+        _tOwned[recipient] = _tOwned[recipient].add(tTransferAmount);
+        _rOwned[recipient] = _rOwned[recipient].add(rTransferAmount);
+        _takeLiquidity(tLiquidity);
+        _reflectFee(rFee, tFee, 0);
         emit Transfer(sender, recipient, tTransferAmount);
     }
 }
