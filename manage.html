@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Primary Meta Tags -->
+    <title>SafeFactory | Safemoon Creator</title>
+    <meta name="title" content="SafeFactory | Safemoon Creator">
+    <meta name="description" content="Create your own Safemoon clone with zero coding! Simply use our SafeFactory and launch your token in minutes! ">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://safefactory.app/">
+    <meta property="og:title" content="SafeFactory | Safemoon Creator">
+    <meta property="og:description" content="Create your own Safemoon clone with zero coding! Simply use our SafeFactory and launch your token in minutes! ">
+    <meta property="og:image" content="https://safefactory.netlify.app/images/safemoonfactory.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://safefactory.app/">
+    <meta property="twitter:title" content="SafeFactory | Safemoon Creator">
+    <meta property="twitter:description" content="Create your own Safemoon clone with zero coding! Simply use our SafeFactory and launch your token in minutes! ">
+    <meta property="twitter:image" content="https://safefactory.netlify.app/images/safemoonfactory.png">
+    <link rel="icon" href="https://safefactory.netlify.app/images/factoryicon.png" type="image/gif" sizes="16x16">
+
+
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300,400|Roboto+Mono&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="css/style.css">
+      <script type="text/javascript" src="./jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="./web3.min.js"></script>
+    <script type="text/javascript" src="./abimanager.js"></script>
+    <script type="text/javascript" src="./manage.js"></script>
+    <title>SafeFactory</title>
+  </head>
+  <body>
+
+
+  <div class="content">
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="row">
+
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-12">
+
+              <h3 class="thin-heading mb-4">Manage your token 💰</h3>
+              <p>Here you can view and set your coin functions and manage your token contract. <a href="https://safefactory.medium.com/how-to-make-your-own-safemoon-with-no-code-6b5ab65c7e05">Read our guide</a> for more info.</p>
+              <br /><br />
+              <div class="mb-5" id="coinBuilder" name="coinbuilder">
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <input type="text" class="form-control" name="tokenaddress" id="tokenaddress" placeholder="Token Address">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <button id="loadtokenbutton" class="enableLoadTokenButton"><b>LOAD TOKEN</b></button>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-12">
+                    <h3>Your Token Details:</h3>
+                    (Will appear once you have loaded your token)
+                    <br/><br/>
+                  </div>
+                  <div class="col-md-12">
+                    <p>Owner:<span id="tokenowner"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Name:<span id="tokenname"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Symbol:<span id="tokensymbol"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Total Supply:<span id="tokensupply"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Max Tx Amount:<span id="tokenmaxamount"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Liquidity Fee:<span id="tokenliquidityfee"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Tax Fee:<span id="tokentaxfee"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Extra Fee:<span id="extrafee"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Extra Fee Wallet:<span id="extrafeewallet"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>swapAndLiquifyEnabled:<span id="tokenswapeandliquifyenabled"></span></p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>Total BNB Contract Balance:<span id="tokenbnbbalance"></span></p>
+                  </div>
+
+                </div>
+
+                <br/><br/>
+                <div class="row">
+                  <div class="col-md-12">
+                    <h3>Change Your Token Settings:</h3>
+                    (You can also change your token settings on bscscan under contract 'write')
+                    <br/><br/>
+                  </div>
+                  <div class="col-md-12">
+                    Approve Spender: (Used to allow PancakeSwap to transfer your tokens)
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="text" class="form-control" name="spenderaddress" id="spenderaddress" placeholder="Spender (address)">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="spenderamount" id="spenderamount" placeholder="Amount (without any decimals)">
+                  </div>
+                  <div class="col-md-12">
+                    <button id="ChangeSpenderButton" class="enableChangeSpenderButton" onclick="approveSpender()">Approve Spender</button>
+                  </div>
+
+                  <br /><br /><br />
+
+                  <div class="col-md-12">
+                    Set Liquidity Fee:
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="liquidityfee" id="liquidityfee" placeholder="Liquidity Fee % (uint256)">
+                  </div>
+                  <div class="col-md-12">
+                    <button id="LiquidityFeeButton" class="enableLiquidityFeeButton" onclick="setLiquidityFee()">Set Liquidity Fee %</button>
+                  </div>
+                  <br /><br /><br />
+
+                  <div class="col-md-12">
+                    Set Tax Fee Distributed To All Holders:
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="taxfee" id="taxfee" placeholder="Tax Fee % (uint256)">
+                  </div>
+                  <div class="col-md-12">
+                    <button id="TaxFeeButton" class="enableTaxFeeButton" onclick="setTaxFee()">Set Tax Fee %</button>
+                  </div>
+                  <br /><br /><br />
+
+                  <div class="col-md-12">
+                    Set Extra Fee:
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="extrafee" id="extrafeepercent" placeholder="Extra Fee % (uint256)">
+                  </div>
+                  <div class="col-md-12">
+                    <button id="TaxFeeButton" class="enableTaxFeeButton" onclick="setExtraFee()">Set Extra Fee %</button>
+                  </div>
+                  <br /><br /><br />
+
+                  <div class="col-md-12">
+                    Set Max Transaction Percent:
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="taxfee" id="mxtxpercent" placeholder="Max Tx % (uint256)">
+                  </div>
+                  <div class="col-md-12">
+                    <button id="TxPercentButton" class="enableTxPercentButton" onclick="setTxPercent()">Set Max Tx %</button>
+                  </div>
+                  <br /><br /><br />
+
+                  <div class="col-md-12">
+                    Set Swap And Liquify Enabled:
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="text" class="form-control" name="swapandliquify" id="swapandliquify" placeholder="True / False">
+                  </div>
+                  <div class="col-md-12">
+                    <button id="SwapAndLiquifyButton" class="enableSwapAndLiquifyButton" onclick="SwapAndLiquify()">Set SwapAndLiquify</button>
+                  </div>
+                  <br /><br /><br /><br />
+
+
+                  <div class="col-md-4">
+                    <button id="renounceownershipbutton" class="renounceownershipbutton" onclick="RenounceOwnership()">Renounce Ownership</button>
+                  </div>
+                  <div class="col-md-4">
+                    <button id="withdrawbnbbutton" class="withdrawbnbbutton" onclick="WithdrawBNB()">Withdraw Overflow BNB</button>
+                  </div>
+                  <div class="col-md-4">
+                  <input type="button" onclick="location.href='./locker.html';" value="Lock Your Tokens" />
+                  </div>
+                  <br /><br /><br />
+
+                </div>
+
+
+
+              </div>
+              <div id="message" align="center"></div>
+
+
+            </div>
+          </div>
+
+          <div class="row mb-5">
+            <div class="col-md-5 mr-auto">
+              <h3 class="thin-heading mb-4">🏭 SafeFactory</h3>
+              <p>
+                Create your own moon. 🌕  <br /><br />
+                SafeFactory makes use of <a href="https://eips.ethereum.org/EIPS/eip-1167">EIP-1167: Minimal Proxy Contract</a> Standards.
+                <br /><br />As such, your token will have exactly the same bytecode as our <a href="">master token ($BRICK)</a> and be fully verified on BSCscan automatically after creation.
+                <br /><br /><img src="./images/discordicon.jpeg"/><a href="https://discord.gg/xVwHgsJG7F"> SafeFactory Discord</a>
+              </p>
+            </div>
+            <div class="col-md-6 ml-auto">
+
+              <h3 class="thin-heading mb-4">🧱 $BRICK:</h3>
+              <p>$Bricks V2 Token Address: <a href="https://bscscan.com/token/0x57da9b0be8d0e55cb328ffc5748676b61bd05aa4">0x564E2cc0c2148C31CBc731c887e439b7DB7d05b7</a></p>
+              <p>
+                <br />
+                We charge a small fee to create your token with SafeFactory and use a portion of the money to buy back $BRICKS on pancakeswap. ♻️
+                <br /><br />
+                Consider buying some $BRICKS v2 on PancakeSwap:
+                <br /><br />
+                $BRICKS V2 chart: <a href="https://poocoin.app/tokens/0x57da9b0be8d0e55cb328ffc5748676b61bd05aa4">PooCoin</a>
+              </p>
+            </div>
+          </div>
+          Disclaimer: SafeFactory accepts no liability for any loss occasioned to any
+          person acting or refraining from action as a result of any material provided or published or using any tool created by SafeFactory for whatever reason. © 2021 by
+          BobTheBNBBuilder!
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Primary Meta Tags -->
+    <title>SafeFactory | Safemoon Creator</title>
+    <meta name="title" content="SafeFactory | Safemoon Creator">
+    <meta name="description" content="Create your own Safemoon clone with zero coding! Simply use our SafeFactory and launch your token in minutes! ">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="http://safefactory.app/">
+    <meta property="og:title" content="SafeFactory | Safemoon Creator">
+    <meta property="og:description" content="Create your own Safemoon clone with zero coding! Simply use our SafeFactory and launch your token in minutes! ">
+    <meta property="og:image" content="https://safefactory.netlify.app/images/safemoonfactory.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://safefactory.app/">
+    <meta property="twitter:title" content="SafeFactory | Safemoon Creator">
+    <meta property="twitter:description" content="Create your own Safemoon clone with zero coding! Simply use our SafeFactory and launch your token in minutes! ">
+    <meta property="twitter:image" content="https://safefactory.netlify.app/images/safemoonfactory.png">
+    <link rel="icon" href="https://safefactory.netlify.app/images/factoryicon.png" type="image/gif" sizes="16x16">
+    <link href="https://fonts.googleapis.com/css?family=Oswald:300,400|Roboto+Mono&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="fonts/icomoon/style.css">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <!-- Style -->
+    <link rel="stylesheet" href="css/style.css">
+      <script type="text/javascript" src="./jquery-3.4.1.js"></script>
+    <script type="text/javascript" src="./web3.min.js"></script>
+    <script type="text/javascript" src="./abi.js"></script>
+    <script type="text/javascript" src="./index.js"></script>
+    <title>SafeFactory</title>
+  </head>
+  <body>
+
+
+  <div class="content">
+
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="row">
+            <div class="col-md-6">
+              <button id="connectwalletbutton" class="enableEthereumButton"><b>CONNECT BINANCE WALLET</b></button>
+            </div>
+            <div class="col-md-6">
+              <h2 id="showaccount">Account: <span class="showAccount"></span></h2>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-md-12">
+
+              <h3 class="thin-heading mb-4">Build your moon token 🚀</h3>
+              <p>Your token will be a clone of Safemoon on the Binance Smart Chain and all the tokens will be sent to your address. You will still need to add the first liquidity to the pancake swap LP after you have sold some tokens or raised some BNB. This will allow anyone to buy and sell your token using Pancake Swap.
+                <br/><br/> <a href="https://safefactory.medium.com/how-to-make-your-own-safemoon-with-no-code-6b5ab65c7e05">Read our guide</a> to launch your Safemoon clone succesfully.
+                You can also <a href="./manage.html">manage</a> your token and <a href="locker.html">lock liquidity</a> using our very own on site tools after launch.
+                <br/><br/><bold>PLEASE NOTE THESE TOOLS CURRENTLY ONLY WORKS WITH METAMASK ON BINANCE SMART CHAIN. DO NOT USE ANY OTHER CHAIN OR WALLET OR YOU MAY LOSE FUNDS.
+              </p>
+
+              <div class="mb-5" id="coinBuilder" name="coinbuilder">
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <input type="text" class="form-control" name="tokenname" id="tokenname" maxlength="15" size="15" placeholder="Token Name">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="text" class="form-control" name="tokensymbol" id="tokensymbol" maxlength="10" size="15" placeholder="Token Symbol">
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="totalsupply" id="totalsupply" max="100000000000000000000" placeholder="Total Supply (Without decimals)">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="decimals" id="decimals" min="9" max="18" placeholder="decimals (Must be between 9-18)">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="sendlimit" id="sendlimit" max="100000000000000000000" placeholder="Max Tx Amount">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="amounttosell" id="amountosell" max="18" placeholder="LP swap amount (Usually 0.5% supply)">
+                  </div>
+
+                </div>
+                Example: Token Name: SafeClone, Token Symbol: SAFEC, Total Supply: 1000000000000000, Decimals: 9, Max Tx Amount: 5000000000000, LP Swap Amount: 500000000000
+                <br /><br /><br /><br />
+                <div class="row">
+
+
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="lpfee" id="lpfee" max="10" placeholder="Total LP %">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    % of each transaction will be sent to Liquidity Provider (PancakeSwap v2).
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="distribution" id="taxfee" max="10" placeholder="Total To Holders %">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    % of each transaction will be redistributed to holders.
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="number" class="form-control" name="extrafeepercent" id="extrafee" max="10" placeholder="Total To Wallet %">
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input type="text" class="form-control" name="extrawallet" id="extrawallet" placeholder="Wallet Address">
+                  </div>
+                  <div class="col-md-12 form-group">
+                    % of each transaction will be send to the wallet of your choice.
+                  </div>
+
+
+
+                </div>
+                <br /><br />
+                Example: Total LP %: 4, Total to Holders %: 5 Total to Charity %: 1, Wallet Address: 0x3A9387e95cAD8a44EC97BEE5A0D044BD1455472A
+                <br /><br /><br /><br />
+                <div class="row">
+                  <div class="col-12">
+
+                  <button id="CreateTokenButton" class="enableCreateTokenButton" onclick="createToken()">Create Your Token</button>
+
+                  <input type="button" onclick="location.href='./manage.html';" value="Manage your token" />
+
+                  <input type="button" onclick="location.href='./locker.html';" value="Lock Your Tokens" />
+
+                  </div>
+                </div>
+              </div>
+              <div id="message" align="center"></div>
+              <div id="form-message-warning mt-4"></div>
+              <div id="form-message-success">
+                Your message was sent, thank you!
+              </div>
+
+            </div>
+          </div>
+
+          <div class="row mb-5">
+            <div class="col-md-12">
+              <h3 class="thin-heading mb-4">💰 Become A Referer & Earn BNB</h3>
+              <p>
+                Earn 0.1 BNB when someone uses SafeFactory using your link!!  <br /><br />
+                Simply add your BSC address to the url like this: <br /> https://safefactory.app/?ref=YOURBSCADDRESS
+
+              </p>
+            </div>
+            <div class="col-md-5 mr-auto">
+              <h3 class="thin-heading mb-4">🏭 SafeFactory</h3>
+              <p>
+                Create your own moon. 🌕  <br /><br />
+                SafeFactory makes use of <a href="https://eips.ethereum.org/EIPS/eip-1167">EIP-1167: Minimal Proxy Contract</a> Standards.
+                <br /><br />As such, your token will have exactly the same bytecode as our <a href="">master token ($BRICK)</a> and be fully verified on BSCscan automatically after creation.
+                <br /><br /><img src="./images/discordicon.jpeg"/><a href="https://discord.gg/xVwHgsJG7F"> SafeFactory Discord</a>
+              </p>
+            </div>
+            <div class="col-md-6 ml-auto">
+
+              <h3 class="thin-heading mb-4">🧱 $BRICK:</h3>
+              <p>$Bricks V2 Token Address: <a href="https://bscscan.com/token/0x57da9b0be8d0e55cb328ffc5748676b61bd05aa4">0x564E2cc0c2148C31CBc731c887e439b7DB7d05b7</a></p>
+              <p>
+                <br />
+                We charge a small fee to create your token with SafeFactory and use a portion of the money to buy back $BRICKS on pancakeswap. ♻️
+                <br /><br />
+                Consider buying some $BRICKS v2 on PancakeSwap:
+                <br /><br />
+                $BRICKS V2 chart: <a href="https://poocoin.app/tokens/0x57da9b0be8d0e55cb328ffc5748676b61bd05aa4">PooCoin</a>
+              </p>
+            </div>
+          </div>
+          Disclaimer: SafeFactory accepts no liability for any loss occasioned to any
+          person acting or refraining from action as a result of any material provided or published or using any tool created by SafeFactory for whatever reason. © 2021 by
+          BobTheBNBBuilder!
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+  </body>
+</html>
